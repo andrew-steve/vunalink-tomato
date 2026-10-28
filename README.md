@@ -60,16 +60,14 @@ The browser model is `public/models/vunalink-mobilenet-v2.onnx`, version `0.3.0`
 - Output: 11 `float32` softmax probabilities.
 - Browser preprocessing: resize to 224 × 224, read RGB pixels, and pass raw values in NHWC order. The MobileNetV2 formula `(pixel / 127.5) - 1` is embedded in the graph and must not be applied again.
 - Classes, in model order:
-
-  | ID | Class | ID | Class |
-  |---|---|---|---|
-  | 0 | Not tomato (rejected) | 6 | Spider mites |
-  | 1 | Bacterial spot | 7 | Target spot |
-  | 2 | Early blight | 8 | Yellow leaf curl virus |
-  | 3 | Late blight | 9 | Mosaic virus |
-  | 4 | Leaf mold | 10 | Healthy |
-  | 5 | Septoria leaf spot | | |
-
+  | ID | Class                 | ID | Class                  |
+  | -- | --------------------- | -- | ---------------------- |
+  | 0  | Not tomato (rejected) | 6  | Spider mites           |
+  | 1  | Bacterial spot        | 7  | Target spot            |
+  | 2  | Early blight          | 8  | Yellow leaf curl virus |
+  | 3  | Late blight           | 9  | Mosaic virus           |
+  | 4  | Leaf mold             | 10 | Healthy                |
+  | 5  | Septoria leaf spot    |    |                        |
 - Rejection: a scan is rejected if the top class is `Not_tomato` or its probability is below `MIN_CONFIDENCE` (0.7, set in `lib/ml/labels.ts`).
 - Metadata and mapping: `public/models/model_metadata.json` and `public/models/class_mapping.json`. Test-set results are in `ml/artifacts/evaluation.json`.
 
@@ -97,7 +95,7 @@ Requires Python 3.11 and Git. Commands are shown for Windows PowerShell; on macO
 
 ```powershell
 # 1. Python environment
-py -3.11 -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r ml\requirements.txt
 
