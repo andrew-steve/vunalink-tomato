@@ -38,7 +38,7 @@ python ml/export_onnx.py --saved-model ml/artifacts/model.keras --output ml/arti
 
 The exported model must be copied to `public/models/` only after its input
 shape, preprocessing, labels, and evaluation have been reviewed. The PWA does
-not consume this training output automatically.
+not consume this training output automatically..
 
 ## Evaluation and references
 

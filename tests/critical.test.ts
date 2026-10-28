@@ -1,6 +1,7 @@
 import "fake-indexeddb/auto";
 import { describe, expect, it } from "vitest";
-import { getDiseaseInfoRw } from "@/lib/localization/disease-info";
+import { getDiseaseInfo, getDiseaseInfoRw } from "@/lib/localization/disease-info";
+import { MODEL_LABELS } from "@/lib/ml/labels";
 import { postprocess } from "@/lib/ml/postprocess";
 import { getRecommendation } from "@/lib/recommendations/knowledge-base";
 import { clearDiagnoses, getDiagnoses, saveDiagnosis } from "@/lib/history/storage";
@@ -17,8 +18,21 @@ describe("critical offline behavior", () => {
   });
 
   it("maps the highest model output index to the correct disease", () => {
-    const result = postprocess([0.01, 0.02, 0.03, 0.8, 0.1, 0.04], metadata);
-    expect(result).toMatchObject({ status: "prediction", prediction: { classId: 3, diseaseId: "tomato_early_blight", crop: "Tomato" } });
+    const result = postprocess([0.02, 0.03, 0.85, 0.03, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01], metadata);
+    expect(result).toMatchObject({ status: "prediction", prediction: { classId: 2, diseaseId: "tomato_early_blight", crop: "Tomato" } });
+  });
+
+  it("rejects non-tomato and low-confidence images instead of guessing", () => {
+    expect(postprocess([0.9, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01], metadata)).toMatchObject({ status: "rejected", reason: "not-tomato" });
+    expect(postprocess([0.1, 0.05, 0.45, 0.3, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01], metadata)).toMatchObject({ status: "rejected", reason: "low-confidence" });
+  });
+
+  it("has guidance for every label the model can return", () => {
+    for (const label of MODEL_LABELS.filter((l) => l.diseaseId !== "not_tomato")) {
+      expect(getDiseaseInfoRw(label.diseaseId).name).not.toBe("Ibisubizo by'isuzuma");
+      expect(getRecommendation(label.diseaseId)).toBeDefined();
+    }
+    expect(getDiseaseInfo("tomato_mosaic_virus", "en").treatment[0]).toContain("no cure");
   });
 
   it("returns safe Kinyarwanda fallback content", () => {

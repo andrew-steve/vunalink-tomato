@@ -1,4 +1,4 @@
-const CACHE_NAME = "vunalink-shell-v3";
+const CACHE_NAME = "vunalink-shell-v5";
 const APP_SHELL = [
   "/",
   "/scan",

@@ -18,6 +18,7 @@ VunaLink is a mobile-first Progressive Web App for Rwandan smallholder farmers. 
 User → Next.js PWA → image validation and resize → MobileNetV2 ONNX
      → local ONNX Runtime Web / WebAssembly inference → disease prediction
      → local recommendation knowledge base → Kinyarwanda result and guidance
+     
 ```
 
 The model only predicts disease classes. Recommendations are separate from inference and do not require a language model.
